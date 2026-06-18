@@ -1,4 +1,4 @@
-// API keys are loaded from `config.js` (window.APP_CONFIG). If not present, falls back to empty strings.
+
 const API_URL = 'https://parseapi.back4app.com/classes/Vendas';
 
 const APP_ID = (window.APP_CONFIG && window.APP_CONFIG.APP_ID) || '';
@@ -26,13 +26,15 @@ async function carregarDados() {
     console.log(results);
     atualizarGrafico(results);
     renderVendasList(results);
+
+    popularFiltroCategorias(results);
   } catch (error) {
     console.error('Erro ao carregar dados:', error);
   }
 }
 
 function atualizarGrafico(dados) {
-  // agregar por categoria (somar valores)
+
   const filtroEl = document.getElementById('filtroCategoria');
   const filtro = filtroEl ? filtroEl.value : 'todos';
 
@@ -67,14 +69,14 @@ function atualizarGrafico(dados) {
   };
 
   if (chartType === 'pie') {
-    // gerar cores para cada categoria
+
     const colors = categorias.map((_, i) => {
       const hue = Math.floor((i * 137.5) % 360); // espalha cores
       return `hsl(${hue}deg 70% 50%)`;
     });
     dataset.backgroundColor = colors;
   } else {
-    // cor padrão para barras
+
     dataset.backgroundColor = 'rgba(54, 162, 235, 0.6)';
     dataset.borderColor = 'rgba(54, 162, 235, 1)';
   }
@@ -91,7 +93,7 @@ function atualizarGrafico(dados) {
   });
 }
 
-// escuta mudança do tipo de gráfico
+
 document.addEventListener('DOMContentLoaded', () => {
   const chartTypeEl = document.getElementById('chartType');
   if (chartTypeEl) {
@@ -99,6 +101,14 @@ document.addEventListener('DOMContentLoaded', () => {
       atualizarGrafico(vendasCache);
     });
   }
+
+  const filtroCategoriaEl = document.getElementById('filtroCategoria');
+  if (filtroCategoriaEl) {
+    filtroCategoriaEl.addEventListener('change', () => {
+      atualizarGrafico(vendasCache);
+    });
+  }
+
 });
 
 function renderVendasList(vendas) {
@@ -220,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       try {
         if (editId) {
-          // atualizar
+
           const url = `${API_URL}/${editId}`;
           await fetch(url, {
             method: 'PUT',
@@ -232,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify(novaVenda)
           });
         } else {
-          // criar
+
           await fetch(API_URL, {
             method: 'POST',
             headers: {
@@ -271,6 +281,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // carregar os dados inicialmente
+
   carregarDados();
 });
+
+function popularFiltroCategorias(dados) {
+  const filtroEl = document.getElementById('filtroCategoria');
+  if (!filtroEl) return;
+
+  const valorAnterior = filtroEl.value || 'todos';
+  filtroEl.innerHTML = '<option value="todos">Todos</option>';
+
+  const categoriasUnicas = [...new Set(dados.map(item => item.categoria).filter(Boolean))];
+
+  categoriasUnicas.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    filtroEl.appendChild(opt);
+  });
+
+  filtroEl.value = valorAnterior;
+}
