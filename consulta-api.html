@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Consulta API</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="consulta-api.html">Consulta API</a>
+    </nav>
+    <header>
+        <h1>Clima em Recife</h1>
+    </header>
+    <div class="card">
+        <canvas id="graficoClima"></canvas>
+    </div>
+    <script>
+        function pad(num) { return String(num).padStart(2, '0'); }
+
+        function formatDateMeteo(times) {
+            // times: array de strings ISO (ex: "2026-05-27T12:00")
+            return times.map(t => {
+                const d = new Date(t);
+                const day = pad(d.getDate());
+                const month = pad(d.getMonth() + 1);
+                const year = d.getFullYear();
+                const hours = pad(d.getHours());
+                const minutes = pad(d.getMinutes());
+                const seconds = pad(d.getSeconds());
+                return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+            });
+        }
+
+        async function carregarClima() {
+            const response = await fetch(
+                'https://api.open-meteo.com/v1/forecast?latitude=-8.05&longitude=-34.88&hourly=temperature_2m'
+            );
+
+            const dados = await response.json();
+
+            const temperaturas = dados.hourly.temperature_2m.slice(0, 12);
+            const horas = dados.hourly.time.slice(0, 12);
+            var datas = formatDateMeteo(horas);
+
+            const ctx = document.getElementById('graficoClima');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: datas,
+                    datasets: [{
+                        label: 'Temperatura °C',
+                        data: temperaturas,
+                        fill: false,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+        carregarClima();
+    </script>
+    <footer>
+        <p>Desenvolvido por Nathan, Willyanne e Ruan Araújo</p>
+        <p>Fonte API: https://api.open-meteo.com</p>
+    </footer>
+</body>
+
+</html>

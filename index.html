@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Livraria</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="consulta-api.html">Consulta API</a>
+    </nav>
+    <header>
+        <h1>Dashboard da Livraria</h1>
+    </header>
+    <div class="container">
+        <div class="top-row">
+            <div class="card" id="grafico">
+                <div class="chart-controls">
+                    <label for="chartType">Tipo de gráfico:</label>
+                    <select id="chartType">
+                        <option value="bar">Barra</option>
+                        <option value="pie">Pizza</option>
+                    </select>
+                </div>
+
+                <label for="filtroCategoria">
+                    Filtrar categoria:
+                </label>
+
+                <select id="filtroCategoria">
+                    <option value="todos">Todos</option>
+                </select>
+
+                <canvas id="graficoCategorias"></canvas>
+            </div>
+            <div class="card">
+                <h2>Adicionar Venda</h2>
+                <form id="formVenda">
+                    <input type="hidden" id="objectId">
+                    <input type="text" id="categoria" placeholder="Categoria" required>
+
+                    <input type="number" id="quantidade" placeholder="Quantidade" required>
+
+                    <input type="number" id="valor" placeholder="Valor" required>
+
+                    <input type="date" id="data_venda" required>
+
+                    <button type="submit">Cadastrar</button>
+                    <button type="button" id="cancelEdit" hidden>Cancelar Edição</button>
+                </form>
+            </div>
+        </div>
+        <div class="card full-width">
+            <h2>Vendas Cadastradas</h2>
+            <div class="table-wrapper">
+                <table id="tabelaVendas" class="tabela">
+                    <thead>
+                        <tr>
+                            <th>Categoria</th>
+                            <th>Quantidade</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>Desenvolvido por Nathan, Willyanne e Ruan Araújo</p>
+        <p>Fonte API: https://api.open-meteo.com</p>
+    </footer>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
