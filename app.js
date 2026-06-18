@@ -1,8 +1,8 @@
 
 const API_URL = 'https://parseapi.back4app.com/classes/Vendas';
 
-const APP_ID = (window.APP_CONFIG && window.APP_CONFIG.APP_ID) || '';
-const REST_KEY = (window.APP_CONFIG && window.APP_CONFIG.REST_KEY) || '';
+const APP_ID = 'MACsvRNp9376es1osMRy8qB7RMMzEAeUCG74Okf9';
+const REST_KEY = 'JYErPg9i39P8s2rUCTRA1ZHfvh3KJvA9OyrfYWZ0';
 
 if (!APP_ID || !REST_KEY) {
   console.warn('Aviso: chaves da API não encontradas. Crie `config.js` a partir de `config.example.js`.');
